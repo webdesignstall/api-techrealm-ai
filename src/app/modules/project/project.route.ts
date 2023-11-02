@@ -11,11 +11,7 @@ router.post(
   ProjectController.createProject
 );
 
-router.get(
-  '/projects/:link',
-  AuthMiddleware.authVerify,
-  ProjectController.getSingleProject
-);
+router.get('/projects/:link', ProjectController.getSingleProject);
 
 router.get(
   '/projects',
@@ -26,5 +22,7 @@ router.get(
   '/projects-byids/:ids',
   ProjectController.getProjectsByLocalStorageProjectIds
 );
+
+router.patch('/projects-update', ProjectController.updateProject);
 
 export const ProjectRoutes = router;

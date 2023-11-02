@@ -1,10 +1,18 @@
 import { IProject } from './project.interface';
 import { Project } from './project.model';
+import mongoose from 'mongoose';
+const ObjectId = mongoose.Types.ObjectId;
 
 const createProject = async (payload: IProject) => {
   const result = await Project.create(payload);
 
   return result;
+};
+
+const updateProject = async (userId: string, ids: []) => {
+  ids?.map(async id => {
+    await Project.updateOne({ _id: new ObjectId(id) }, { userId });
+  });
 };
 
 const getProjectsByAuthUser = async (
@@ -27,4 +35,5 @@ export const ProjectService = {
   getProjectsByAuthUser,
   getSingleProject,
   getProjectsByLocalStorageProjectIds,
+  updateProject,
 };

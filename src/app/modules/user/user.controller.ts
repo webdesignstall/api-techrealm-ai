@@ -7,11 +7,13 @@ import { IUser } from './user.interface';
 
 const register = catchAsync(async (req: Request, res: Response) => {
   const userInfo = req.body;
+
   const result = await UserService.register(userInfo);
+
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: 'Account register successfully',
+    message: 'Account registration successfully',
     data: result,
   });
 });

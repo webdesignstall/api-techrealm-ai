@@ -30,6 +30,7 @@ const register = async (payload: IUser) => {
   return {
     accessToken,
     refreshToken,
+    id: createdUser?.id,
   };
 };
 

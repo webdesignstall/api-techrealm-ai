@@ -8,9 +8,16 @@ import _ from 'lodash';
 import ApiError from '../../../errors/ApiError';
 import mongoose from 'mongoose';
 import ObjectId = mongoose.Types.ObjectId;
+import axios from 'axios';
+import config from '../../../config';
 
 const createProject = catchAsync(async (req: Request, res: Response) => {
   const projectInfo = req.body;
+
+  const aiUrl = config.ai_url as string;
+  const { data } = await axios.get(aiUrl);
+  projectInfo.link = data.id + projectInfo?.projectName;
+  projectInfo.image = data.url;
 
   const result = await ProjectService.createProject(projectInfo);
 
@@ -19,6 +26,19 @@ const createProject = catchAsync(async (req: Request, res: Response) => {
     success: true,
     message: 'Project generate successfully',
     data: result,
+  });
+});
+
+const updateProject = catchAsync(async (req: Request, res: Response) => {
+  const { userId, ids } = req.body;
+
+  await ProjectService.updateProject(userId, ids);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: '',
+    data: '',
   });
 });
 
@@ -76,4 +96,5 @@ export const ProjectController = {
   getSingleProject,
   getAllProject,
   getProjectsByLocalStorageProjectIds,
+  updateProject,
 };
