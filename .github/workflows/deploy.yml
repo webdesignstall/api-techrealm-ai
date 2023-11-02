@@ -1,0 +1,20 @@
+on:
+  push:
+    branches: ['main']
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VPS Server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSHKEY }}
+          ARGS: '-rlgoDzvc -i'
+          REMOTE_HOST: ${{ secrets.HOST }}
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          SCRIPT_AFTER: |
+            cd ${{ secrets.TARGET_PATH }}
+            git pull --rebase
+            npm install --yes
+            pm2 reload apisortededucation
+            echo $RSYNC_STDOUT
