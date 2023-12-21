@@ -21,7 +21,7 @@ const projectSchema = new Schema<IProject>(
     },
     link: {
       type: String,
-      // unique: true,
+      unique: true,
     },
     image: {
       type: String,
