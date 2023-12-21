@@ -9,15 +9,35 @@ import ApiError from '../../../errors/ApiError';
 import mongoose from 'mongoose';
 import ObjectId = mongoose.Types.ObjectId;
 import axios from 'axios';
-import config from '../../../config';
+import slugify from 'slugify';
+// import config from '../../../config';
 
 const createProject = catchAsync(async (req: Request, res: Response) => {
   const projectInfo = req.body;
 
-  const aiUrl = config.ai_url as string;
-  const { data } = await axios.get(aiUrl);
-  projectInfo.link = data.id + projectInfo?.projectName;
-  projectInfo.image = data.url;
+
+
+
+  const { data:imageData } = await axios.get("https://dog.ceo/api/breeds/image/random");
+  projectInfo.image = imageData?.message;
+  projectInfo.link = slugify(projectInfo.projectName, {
+    lower: true,
+    trim: true
+  });
+  const itemExist = await ProjectService.getSingleProject(projectInfo.link);
+    if(itemExist){
+      return sendResponse<IProject>(res, {
+        statusCode: StatusCodes.CONFLICT,
+        success: false,
+        message: 'Item Name already exists',
+        data: itemExist,
+      });
+      
+    }
+
+
+
+
 
   const result = await ProjectService.createProject(projectInfo);
 
