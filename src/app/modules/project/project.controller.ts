@@ -18,8 +18,11 @@ const createProject = catchAsync(async (req: Request, res: Response) => {
 
 
 
-  const { data:imageData } = await axios.get("https://dog.ceo/api/breeds/image/random");
-  projectInfo.image = imageData?.message;
+  const { data } = await axios.post("https://api1.techrealm.pk/clone-create-screenshot", {
+    "short_description": projectInfo.prompt
+  });
+  projectInfo.image = data?.img;
+  projectInfo.liveLink = data?.url;
   projectInfo.link = slugify(projectInfo.projectName, {
     lower: true,
     trim: true
@@ -83,7 +86,7 @@ const getProjectsByLocalStorageProjectIds = catchAsync(
       throw new ApiError(StatusCodes.BAD_REQUEST, array.message);
     }
 
-    const objectIds = array.reduce((prev: [], current: string) => {
+    const objectIds = array?.reduce((prev: [], current: string) => {
       return [...prev, new ObjectId(current)];
     }, []);
     const result = await ProjectService.getProjectsByLocalStorageProjectIds(
