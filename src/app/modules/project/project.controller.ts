@@ -18,7 +18,7 @@ const createProject = catchAsync(async (req: Request, res: Response) => {
 
 
 
-  const { data } = await axios.post("https://api1.techrealm.pk/clone-create-screenshot", {
+  const { data } = await axios.post(process.env.API_URL, {
     "short_description": projectInfo.prompt
   });
   projectInfo.image = data?.img;
