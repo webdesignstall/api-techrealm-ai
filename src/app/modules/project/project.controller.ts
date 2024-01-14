@@ -15,9 +15,6 @@ import slugify from 'slugify';
 const createProject = catchAsync(async (req: Request, res: Response) => {
   const projectInfo = req.body;
 
-
-
-
   const { data } = await axios.post(process.env.API_URL, {
     "short_description": projectInfo.prompt
   });
